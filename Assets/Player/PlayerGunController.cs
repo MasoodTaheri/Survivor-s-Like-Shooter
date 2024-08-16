@@ -37,17 +37,18 @@ public class PlayerGunController : MonoBehaviour
 
     private void CreateBulletPool()
     {
-        _bulletpool = new ObjectPool<Bullet>(
-            () => { return Instantiate(_bulletPrefab); },
-            bullet => bullet.gameObject.SetActive(true),
-            Bullet => Bullet.gameObject.SetActive(false),
-            Bullet => Destroy(Bullet.gameObject),
-            false, 15, 20);
+        //_bulletpool = new ObjectPool<Bullet>(
+        //    () => { return Instantiate(_bulletPrefab); },
+        //    bullet => bullet.gameObject.SetActive(true),
+        //    Bullet => Bullet.gameObject.SetActive(false),
+        //    Bullet => Destroy(Bullet.gameObject),
+        //    false, 15, 20);
     }
 
     public void ReleaseBulletFromPool(Bullet bullet)
     {
         _bulletpool.Release(bullet);
+        //_bulletpool.
     }
 
     private void OnEnable()
