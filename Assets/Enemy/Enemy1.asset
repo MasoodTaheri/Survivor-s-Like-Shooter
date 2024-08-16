@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f28b4507345da8249b190a888a15bade, type: 3}
-  m_Name: Enemy0
+  m_Name: Enemy1
   m_EditorClassIdentifier: 
-  initHealth: 10
+  initHealth: 15
   DamagePerSecond: 1
-  Speed: 3
+  Speed: 2

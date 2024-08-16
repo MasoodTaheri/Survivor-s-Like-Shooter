@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8495203897761340664}
-  Enemydata: {fileID: 11400000, guid: 73ea61b5fc038ab4fade973a862762af, type: 2}
+  Enemydata: {fileID: 11400000, guid: b2369c3703c58dc4f86aee08ef756a1f, type: 2}
 --- !u!1 &9181586906553249554
 GameObject:
   m_ObjectHideFlags: 0

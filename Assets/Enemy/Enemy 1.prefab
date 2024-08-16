@@ -279,4 +279,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6804980856691806140}
-  Enemydata: {fileID: 11400000, guid: 73ea61b5fc038ab4fade973a862762af, type: 2}
+  Enemydata: {fileID: 11400000, guid: 33252df5e03941e4dac74c5e0364500c, type: 2}
