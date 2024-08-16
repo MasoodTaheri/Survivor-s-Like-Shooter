@@ -2,41 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using Random = UnityEngine.Random;
-
-[Serializable]
-public class ExtendedPool<T> where T : class
-{
-    public List<T> AvailableItems = new List<T>();
-    [SerializeField] private ObjectPool<T> _pool;
-
-    public ExtendedPool(Func<T> createFunc,
-        Action<T> actionOnGet = null,
-        Action<T> actionOnRelease = null,
-             Action<T> actionOndestroy = null)
-    {
-        _pool = new ObjectPool<T>(
-         createFunc,
-         actionOnGet,
-         actionOnRelease,
-         actionOndestroy,
-         false, 15, 20);
-    }
-
-    public T Get()
-    {
-        T temp = _pool.Get();
-        AvailableItems.Add(temp);
-        return temp;
-    }
-
-    public void Release(T item)
-    {
-        AvailableItems.Remove(item);
-        _pool.Release(item);
-    }
-}
 
 public class EnemiesController : MonoBehaviour
 {
@@ -52,44 +18,32 @@ public class EnemiesController : MonoBehaviour
     private int _deadEnemyCount = 0;
 
     //public List<EnemyBehavior> EnemyPrefabs;
-    private List<EnemyBehavior> Enemylist;
+    //private List<EnemyBehavior> Enemylist = new List<EnemyBehavior>();
     //private List<ObjectPool<EnemyBehavior>> _enemypool;
     //public ExtendedPool<EnemyBehavior> pool1;
+    private List<ExtendedPool<EnemyBehavior>> EnemiesPool;
 
+
+    //public EnemyBehavior TempEnemy;
+    //public ObjectPool<EnemyBehavior> PooledObject;
     public void Initialize(GameObject player)
     {
         _player = player;
-        //_uiHandler = uiHandler;
-        //_lootManager = lootManager;
         _enemyControllerModel = new EnemyControllerModel(EnemyControllerData);
         _deadEnemyCount = 0;
-        //EnemyPrefabs = new List<EnemyBehavior>();
-        //EnemyPrefabs.AddRange(_enemyControllerModel.EnemyPrefabs);
 
 
-
-        // for (int i = 0; i < EnemyPrefabs.Count; i++)
-        // {
-        //     var enemypool = new ObjectPool<EnemyBehavior>(
-        //() => { return Instantiate(EnemyPrefabs[i]); },//create
-        //enemy => enemy.gameObject.SetActive(true),//onget
-        //enemy => enemy.gameObject.SetActive(false),//onrelease
-        //enemy => Destroy(enemy.gameObject),//ondestroy
-        //false, 15, 20);
-        //     _enemypool.Add(enemypool);
-
-        //     //_enemypool[0].Get();
-        // }
-
-      //  pool1 = new ExtendedPool<EnemyBehavior>(
-      //createFunc: () => { return Instantiate(_enemyControllerModel.EnemyPrefabs[0].item); },
-      //actionOnGet: enemy => { }
-
-      //)
-      //  {
-
-      //  }
-
+        EnemiesPool = new List<ExtendedPool<EnemyBehavior>>();
+        for (int i = 0; i < _enemyControllerModel.EnemyPrefabs.Count; i++)
+        {
+            int currentIndex = i;
+            EnemiesPool.Add(new ExtendedPool<EnemyBehavior>(
+            createFunc: () => { return Instantiate(_enemyControllerModel.EnemyPrefabs[currentIndex].item); },//create
+            enemy => enemy.gameObject.SetActive(true),//onget
+            enemy => enemy.gameObject.SetActive(false),//onrelease
+            enemy => Destroy(enemy.gameObject)//ondestroy
+            ));
+        }
     }
 
     void Update()
@@ -105,15 +59,14 @@ public class EnemiesController : MonoBehaviour
         {
             if (_enemyControllerModel.EnemyPrefabs.Count > 0)
             {
-                //var enemy = Instantiate(_enemyControllerModel.EnemyPrefabs[Random.Range(0, _enemyControllerModel.EnemyPrefabs.Count)]);
-                var enemy = Instantiate(_enemyControllerModel.selectRandomEnemy());
+                var enemy = EnemiesPool[_enemyControllerModel.selectRandomEnemyID()].Get();
 
                 var randomPos = Random.insideUnitCircle.normalized * _enemyControllerModel.SpawnDistance;
                 enemy.transform.position = _player.transform.position + new Vector3(randomPos.x, randomPos.y, 0);
                 enemy.Initialize(this, _player);
 
                 enemy.gameObject.SetActive(true);
-                Enemylist.Add(enemy);
+                //Enemylist.Add(enemy);
             }
             yield return new WaitForSeconds(_enemyControllerModel.MaxSpawnRate - _enemyControllerModel.EnemySpawnRate + 1);
         }
@@ -121,19 +74,30 @@ public class EnemiesController : MonoBehaviour
 
     public List<GameObject> GetAliveEnemyList()
     {
+        if (EnemiesPool==null)
+            return new List<GameObject>();
         List<GameObject> list = new List<GameObject>();
-        foreach (EnemyBehavior enemy in Enemylist)
-            list.Add(enemy.gameObject);
-        return list;
+        //foreach (EnemyBehavior enemy in Enemylist)
+            //list.Add(enemy.gameObject);
+
+        foreach (var pool in EnemiesPool)
+            for (int i=0;i<pool.AvailableItems.Count;i++)
+                list.Add(pool.AvailableItems[i].gameObject);
+
+            return list;
     }
 
     public void DestroyAllEnemies()
     {
         _allowGenerateEnemy = false;
-        foreach (var enemy in Enemylist)
-        {
-            Destroy(enemy.gameObject);
-        }
+
+        foreach (var pool in EnemiesPool)
+            pool.Clear();
+
+        //    foreach (var enemy in Enemylist)
+        //{
+        //    Destroy(enemy.gameObject);
+        //}
     }
 
     public void StartEnemySpawner()
@@ -148,7 +112,11 @@ public class EnemiesController : MonoBehaviour
 
         OnEnemyKilledChanged?.Invoke(_deadEnemyCount);
         OnEnemyKilled?.Invoke(enemy.gameObject.transform.position);
-        Enemylist.Remove(enemy);
-        Destroy(enemy.gameObject);
+        //Enemylist.Remove(enemy);
+        //pool1[0].Release(enemy);
+        foreach (var pool in EnemiesPool)
+            if (pool.IsInList(enemy))
+                pool.Release(enemy);
+        //Destroy(enemy.gameObject);
     }
 }

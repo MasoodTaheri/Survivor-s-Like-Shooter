@@ -35,7 +35,24 @@ public class EnemyControllerModel
         }
     }
 
-    public EnemyBehavior selectRandomEnemy()
+    //public EnemyBehavior selectRandomEnemy()
+    //{
+    //    float totalChance = EnemyPrefabs.Sum(o => o.chance);
+    //    float accumulatedChance = 0;
+    //    for (int i=0;i<EnemyPrefabs.Count; i++)
+    //    {
+    //        EnemyPrefabs[i].SetRandomRange(accumulatedChance, accumulatedChance + EnemyPrefabs[i].chance);
+    //        accumulatedChance += EnemyPrefabs[i].chance;
+    //    }
+    //    float randomValue= Random.Range(0, totalChance);
+    //    foreach (var behavior in EnemyPrefabs)
+    //        if (behavior.CheckChanse(randomValue))
+    //            return behavior.item;
+
+    //    return null;
+    //}  
+    
+    public int selectRandomEnemyID()
     {
         float totalChance = EnemyPrefabs.Sum(o => o.chance);
         float accumulatedChance = 0;
@@ -45,10 +62,10 @@ public class EnemyControllerModel
             accumulatedChance += EnemyPrefabs[i].chance;
         }
         float randomValue= Random.Range(0, totalChance);
-        foreach (var behavior in EnemyPrefabs)
-            if (behavior.CheckChanse(randomValue))
-                return behavior.item;
+        for (int i = 0; i < EnemyPrefabs.Count; i++)
+            if (EnemyPrefabs[i].CheckChanse(randomValue))
+                return i;
 
-        return null;
+        return -1;
     }
 }

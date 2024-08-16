@@ -17,7 +17,11 @@ MonoBehaviour:
   MaxSpawnRate: 10
   IncreaseSpwanRate: 0.001
   EnemyPrefabs:
-  - {fileID: 4483381276913707147, guid: f913141174fcaad48b9bcb6fcdf06238, type: 3}
-  - {fileID: 2339415992097964399, guid: 85eb5242fbb0fe04993f591d7f2d00a2, type: 3}
-  - {fileID: 6895876480820198559, guid: dfd15ef15aee70c44bec2315ca1529a8, type: 3}
-  - {fileID: 1201536394621050399, guid: 2f43261d5911db84b9d3744907bf071a, type: 3}
+  - item: {fileID: 4483381276913707147, guid: f913141174fcaad48b9bcb6fcdf06238, type: 3}
+    chance: 0.719
+  - item: {fileID: 2339415992097964399, guid: 85eb5242fbb0fe04993f591d7f2d00a2, type: 3}
+    chance: 0.551
+  - item: {fileID: 6895876480820198559, guid: dfd15ef15aee70c44bec2315ca1529a8, type: 3}
+    chance: 0.4
+  - item: {fileID: 1201536394621050399, guid: 2f43261d5911db84b9d3744907bf071a, type: 3}
+    chance: 0.135
