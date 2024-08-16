@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 
 public class EnemiesController : MonoBehaviour
 {
-    public List<EnemyBehavior> enemyList;
-    public List<EnemyBehavior> aliveEnemyList;
+    //public List<EnemyBehavior> enemyList;
+    //public List<EnemyBehavior> aliveEnemyList;
     public EnemyControllerSO EnemyControllerData;
     public Action<int> OnEnemyKilledChanged;
     public Action<Vector3> OnEnemyKilled;
@@ -17,6 +18,9 @@ public class EnemiesController : MonoBehaviour
     private EnemyControllerModel _enemyControllerModel;
     private int _deadEnemyCount = 0;
 
+    public List<EnemyBehavior> EnemyPrefabs;
+    public List<EnemyBehavior> Enemylist;
+    //private List<ObjectPool<EnemyBehavior>> _enemypool;
 
     public void Initialize(GameObject player)
     {
@@ -25,6 +29,24 @@ public class EnemiesController : MonoBehaviour
         //_lootManager = lootManager;
         _enemyControllerModel = new EnemyControllerModel(EnemyControllerData);
         _deadEnemyCount = 0;
+
+
+
+        // for (int i = 0; i < EnemyPrefabs.Count; i++)
+        // {
+        //     var enemypool = new ObjectPool<EnemyBehavior>(
+        //() => { return Instantiate(EnemyPrefabs[i]); },//create
+        //enemy => enemy.gameObject.SetActive(true),//onget
+        //enemy => enemy.gameObject.SetActive(false),//onrelease
+        //enemy => Destroy(enemy.gameObject),//ondestroy
+        //false, 15, 20);
+        //     _enemypool.Add(enemypool);
+
+        //     //_enemypool[0].Get();
+        // }
+
+
+
     }
 
     void Update()
@@ -38,16 +60,30 @@ public class EnemiesController : MonoBehaviour
     {
         while (_allowGenerateEnemy)
         {
-            if (enemyList.Count > 0)
+            //if (enemyList.Count > 0)
+            //{
+            //    var enemy = enemyList[Random.Range(0, enemyList.Count)];
+            //    var randomPos = Random.insideUnitCircle.normalized * _enemyControllerModel.SpawnDistance;
+            //    enemy.transform.position = _player.transform.position + new Vector3(randomPos.x, randomPos.y, 0);
+            //    enemy.Initialize(this, _player);
+
+            //    enemy.gameObject.SetActive(true);
+            //    aliveEnemyList.Add(enemy);
+            //    enemyList.Remove(enemy);
+            //}
+
+            if (EnemyPrefabs.Count > 0)
             {
-                var enemy = enemyList[Random.Range(0, enemyList.Count)];
+                var enemy = Instantiate(EnemyPrefabs[Random.Range(0, EnemyPrefabs.Count)]);
+                //var enemy = EnemyPrefabs[Random.Range(0, enemyList.Count)];
                 var randomPos = Random.insideUnitCircle.normalized * _enemyControllerModel.SpawnDistance;
                 enemy.transform.position = _player.transform.position + new Vector3(randomPos.x, randomPos.y, 0);
                 enemy.Initialize(this, _player);
 
                 enemy.gameObject.SetActive(true);
-                aliveEnemyList.Add(enemy);
-                enemyList.Remove(enemy);
+                Enemylist.Add(enemy);
+                //aliveEnemyList.Add(enemy);
+                //enemyList.Remove(enemy);
             }
             yield return new WaitForSeconds(_enemyControllerModel.MaxSpawnRate - _enemyControllerModel.EnemySpawnRate + 1);
         }
@@ -55,26 +91,26 @@ public class EnemiesController : MonoBehaviour
 
     public List<GameObject> GetAliveEnemyList()
     {
-        //aliveEnemyList.RemoveAll(x => x._currentHealth <= 0);
-        //foreach (var enemy in aliveEnemyList)
-        //{
-        //    if (enemy._health <= 0)
-        //        enemyList.Add(enemy);
-        //}
+        // foreach (var enemy in enemyList)
+        //    aliveEnemyList.Remove(enemy);
 
-        foreach (var enemy in enemyList)
-            aliveEnemyList.Remove(enemy);
+        //List<GameObject> list = new List<GameObject>();
+        //foreach (EnemyBehavior enemy in aliveEnemyList)
+        //    list.Add(enemy.gameObject);
+        //return list;
 
         List<GameObject> list = new List<GameObject>();
-        foreach (EnemyBehavior enemy in aliveEnemyList)
+        foreach (EnemyBehavior enemy in Enemylist)
             list.Add(enemy.gameObject);
         return list;
+
+
     }
 
     public void DestroyAllEnemies()
     {
         _allowGenerateEnemy = false;
-        foreach (var enemy in aliveEnemyList)
+        foreach (var enemy in Enemylist)
         {
             Destroy(enemy.gameObject);
         }
@@ -88,13 +124,20 @@ public class EnemiesController : MonoBehaviour
 
     public void EnemyDead(EnemyBehavior enemy)
     {
-        aliveEnemyList.Remove(enemy);
-        enemyList.Add(enemy);
+        //aliveEnemyList.Remove(enemy);
+        //enemyList.Add(enemy);
+        //_deadEnemyCount++;
+
+        //OnEnemyKilledChanged?.Invoke(_deadEnemyCount);
+        ////_uiHandler.IncKillCount();
+        //OnEnemyKilled?.Invoke(enemy.gameObject.transform.position);
+        ////_lootManager.SpawnLoot(enemy.gameObject.transform.position);
+        ///
         _deadEnemyCount++;
 
         OnEnemyKilledChanged?.Invoke(_deadEnemyCount);
-        //_uiHandler.IncKillCount();
         OnEnemyKilled?.Invoke(enemy.gameObject.transform.position);
-        //_lootManager.SpawnLoot(enemy.gameObject.transform.position);
+        Enemylist.Remove(enemy);    
+        Destroy(enemy.gameObject);
     }
 }
