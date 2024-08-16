@@ -13,17 +13,7 @@ public class PlayerGunController : MonoBehaviour
     private EnemiesController _enemiesController;
     private ObjectPool<Bullet> _bulletpool;
     private PlayerModel _playerModel;
-    //public Bullet Bullet;
-    //public float distanceToShoot;
-    //public PlayerController playerController;
-    //public UIHandler UIhandler;
-    //public int ShootRate;
 
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-        
-    //}
 
     public void Initialize(PlayerModel playerModel,
         EnemiesController enemiesController, Bullet bulletPrefab)
@@ -48,7 +38,6 @@ public class PlayerGunController : MonoBehaviour
     public void ReleaseBulletFromPool(Bullet bullet)
     {
         _bulletpool.Release(bullet);
-        //_bulletpool.
     }
 
     private void OnEnable()
@@ -65,8 +54,7 @@ public class PlayerGunController : MonoBehaviour
     {
         if (!_playerModel.GetBullet())
             return;
-        //UIhandler.UpdateAmmo(_playerModel.GetAmmoCount());
-        //Bullet = Instantiate(BulletPrefab);
+
         var Bullet = _bulletpool.Get();
         Bullet.Init(this, BulletSpawnPoint.position, ShootTarget.transform.position);
     }

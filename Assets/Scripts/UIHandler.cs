@@ -19,7 +19,7 @@ public class UIHandler : MonoBehaviour
     [Multiline][SerializeField] private string GameoverText;
     [SerializeField] private TMP_Text GameOverTMPText;
 
-    public PlayerModel PlayerModel;
+    private PlayerModel PlayerModel;
 
     public void Initialize(PlayerModel playerModel, EnemiesController enemiesController)
     {
@@ -53,7 +53,6 @@ public class UIHandler : MonoBehaviour
 
     public void IncKillCount(int count)
     {
-        //killCount++;
         killCount = count;
         KillCountText.text = count.ToString();
     }
@@ -64,30 +63,6 @@ public class UIHandler : MonoBehaviour
         levelText.text = $"Lv.{levelValue}";
     }
 
-    //public void ExperienceUpdate(int currentvalue, int maxValue)
-    //{
-    //    ExperienceSlider.value = 1.0f * currentvalue / maxValue;
-    //    if (ExperienceSlider.value == 1)
-    //    {
-    //        LevelUpdate(1);
-    //    }
-    //}
-
-    //public void UpdatePlayerModel(PlayerModel model)
-    //{
-    //    HealthSlider.value = 1.0f * modelcurrentvalue / maxValue;
-    //}
-
-    //public void UpdateHealth(int currentvalue, int maxValue)
-    //{
-    //    HealthSlider.value = 1.0f * currentvalue / maxValue;
-    //}
-
-    //public void UpdateAmmo(int ammoCount)
-    //{
-    //    AmmoCountText.text = ammoCount.ToString();
-    //}
-
     public void PlayerDeadPanelShow()
     {
         DeadPanel.SetActive(true);
@@ -95,7 +70,7 @@ public class UIHandler : MonoBehaviour
     }
 
     public void Restart() => SceneManager.LoadScene(1);
-    //Debug.Log("restart");
+   
 
 
     public void ExitGame()

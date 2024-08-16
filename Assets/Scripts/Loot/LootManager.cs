@@ -2,17 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 using Random = UnityEngine.Random;
 
 public class LootManager : MonoBehaviour
 {
     public List<Loot> lootList;
-    public PlayerModel _playerModel;
     public float SpawnDistance;
-    [SerializeField] private GameObject _player;
+
     [SerializeField] private float _delayForRespawn;
-    public List<ExtendedPool<Loot>> LootPools;
+
+    private PlayerModel _playerModel;
+    private GameObject _player;
+    private List<ExtendedPool<Loot>> LootPools;
 
 
     public void Initialize(PlayerModel playerModel, GameObject player, EnemiesController enemiesController)
@@ -42,7 +43,7 @@ public class LootManager : MonoBehaviour
     public void SpawnLoot(Vector3 position)
     {
         int r = Random.Range(0, LootPools.Count);
-        var l = LootPools[r].Get();//Instantiate(lootList[r]);
+        var l = LootPools[r].Get();
         l.Initialize(this);
         l.transform.position = position;
     }

@@ -13,7 +13,6 @@ public class ObjectWithChance<T>
         _min = min;
         _max = max;
     }
-
     public bool CheckChanse(float randomValue)
     {
         if ((randomValue > _min) && (randomValue < _max))

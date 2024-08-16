@@ -8,7 +8,6 @@ public class EnemyControllerSO : ScriptableObject
     public float EnemySpawnRate;
     public float MaxSpawnRate;
     public float IncreaseSpwanRate;
-    //public List<EnemyBehavior> EnemyPrefabs;
     public List<ObjectWithChance<EnemyBehavior>> EnemyPrefabs;
 }
 

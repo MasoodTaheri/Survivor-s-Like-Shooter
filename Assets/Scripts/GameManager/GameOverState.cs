@@ -11,7 +11,6 @@ public class GameOverState : IGameState
 
     public void Enter()
     {
-        Debug.Log("Entering Game Over State");
         _gameManager._enemyController.DestroyAllEnemies();
         _gameManager.UIHandler.PlayerDeadPanelShow();
     }
@@ -23,7 +22,6 @@ public class GameOverState : IGameState
 
     public void Exit()
     {
-        // Cleanup before exiting the game over state
         Debug.Log("Exiting Game Over State");
     }
 }

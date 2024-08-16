@@ -2,7 +2,6 @@ using UnityEngine;
 using Zenject;
 
 
-//public enum state { Playing, Dead }
 public class GameManager : MonoBehaviour
 {
     public IGameState _currentState;

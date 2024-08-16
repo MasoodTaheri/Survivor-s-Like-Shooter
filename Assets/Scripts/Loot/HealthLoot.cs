@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Loot : MonoBehaviour
@@ -17,15 +15,12 @@ public abstract class Loot : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            //collision.GetComponent<PlayerController>().UpdateModel(LootData);
             _lootManager.CollectLoot(ApplyEffect);
             transform.DOMove(collision.transform.position, 0.25f).
                 OnComplete(() =>
                 {
-                    //Destroy(gameObject); 
                     _lootManager.ReleaseLoot(this);
                 });
-
         }
     }
 }

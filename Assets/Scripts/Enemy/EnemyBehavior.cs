@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 public class EnemyBehavior : MonoBehaviour, IHealth
 {
@@ -43,7 +42,7 @@ public class EnemyBehavior : MonoBehaviour, IHealth
     {
         direction = (_player.transform.position - transform.position).normalized
             * _enemyModel.Speed;
-        _rigidbody.velocity = direction;// * forcescale * forceFactor;
+        _rigidbody.velocity = direction;
     }
     private void OnTriggerExit2D(Collider2D collision)
     {

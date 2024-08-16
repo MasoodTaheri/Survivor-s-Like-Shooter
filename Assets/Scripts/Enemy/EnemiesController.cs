@@ -6,8 +6,6 @@ using Random = UnityEngine.Random;
 
 public class EnemiesController : MonoBehaviour
 {
-    //public List<EnemyBehavior> enemyList;
-    //public List<EnemyBehavior> aliveEnemyList;
     public EnemyControllerSO EnemyControllerData;
     public Action<int> OnEnemyKilledChanged;
     public Action<Vector3> OnEnemyKilled;
@@ -16,16 +14,9 @@ public class EnemiesController : MonoBehaviour
     private bool _allowGenerateEnemy;
     private EnemyControllerModel _enemyControllerModel;
     private int _deadEnemyCount = 0;
-
-    //public List<EnemyBehavior> EnemyPrefabs;
-    //private List<EnemyBehavior> Enemylist = new List<EnemyBehavior>();
-    //private List<ObjectPool<EnemyBehavior>> _enemypool;
-    //public ExtendedPool<EnemyBehavior> pool1;
     private List<ExtendedPool<EnemyBehavior>> EnemiesPool;
 
 
-    //public EnemyBehavior TempEnemy;
-    //public ObjectPool<EnemyBehavior> PooledObject;
     public void Initialize(GameObject player)
     {
         _player = player;
@@ -66,7 +57,6 @@ public class EnemiesController : MonoBehaviour
                 enemy.Initialize(this, _player);
 
                 enemy.gameObject.SetActive(true);
-                //Enemylist.Add(enemy);
             }
             yield return new WaitForSeconds(_enemyControllerModel.MaxSpawnRate - _enemyControllerModel.EnemySpawnRate + 1);
         }
@@ -74,17 +64,15 @@ public class EnemiesController : MonoBehaviour
 
     public List<GameObject> GetAliveEnemyList()
     {
-        if (EnemiesPool==null)
+        if (EnemiesPool == null)
             return new List<GameObject>();
         List<GameObject> list = new List<GameObject>();
-        //foreach (EnemyBehavior enemy in Enemylist)
-            //list.Add(enemy.gameObject);
 
         foreach (var pool in EnemiesPool)
-            for (int i=0;i<pool.AvailableItems.Count;i++)
+            for (int i = 0; i < pool.AvailableItems.Count; i++)
                 list.Add(pool.AvailableItems[i].gameObject);
 
-            return list;
+        return list;
     }
 
     public void DestroyAllEnemies()
@@ -93,11 +81,6 @@ public class EnemiesController : MonoBehaviour
 
         foreach (var pool in EnemiesPool)
             pool.Clear();
-
-        //    foreach (var enemy in Enemylist)
-        //{
-        //    Destroy(enemy.gameObject);
-        //}
     }
 
     public void StartEnemySpawner()
@@ -112,11 +95,9 @@ public class EnemiesController : MonoBehaviour
 
         OnEnemyKilledChanged?.Invoke(_deadEnemyCount);
         OnEnemyKilled?.Invoke(enemy.gameObject.transform.position);
-        //Enemylist.Remove(enemy);
-        //pool1[0].Release(enemy);
         foreach (var pool in EnemiesPool)
             if (pool.IsInList(enemy))
                 pool.Release(enemy);
-        //Destroy(enemy.gameObject);
+
     }
 }
