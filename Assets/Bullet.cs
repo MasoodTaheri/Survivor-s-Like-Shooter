@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int _damageAmount = 1;
     private Rigidbody2D _rigidBody;
     private Vector2 _fireDirection;
+    private PlayerGunController _gunController;
 
     // Start is called before the first frame update
     void Start()
@@ -16,12 +17,12 @@ public class Bullet : MonoBehaviour
     }
 
 
-    public void Init(/*Gun gun,*/ Vector2 bulletSpawnPos, Vector2 Direction)
+    public void Init(PlayerGunController gunController, Vector2 bulletSpawnPos, Vector2 Direction)
     {
-        //_gun = gun;
+        _gunController = gunController;
         transform.position = bulletSpawnPos;
         _fireDirection = (Direction - bulletSpawnPos).normalized;
-        Destroy(gameObject, 1.5f);
+        //Destroy(gameObject, 1.5f);
     }
 
     private void FixedUpdate()
@@ -39,8 +40,9 @@ public class Bullet : MonoBehaviour
 
         //_gun.ReleaseBulletFromPool(this);
         IHealth health = other.GetComponent<IHealth>();
-        health?.TakeDamage(1);
-        Destroy(gameObject);
+        health?.TakeDamage(_damageAmount);
+        //Destroy(gameObject);
+        _gunController.ReleaseBulletFromPool(this);
 
     }
 }
