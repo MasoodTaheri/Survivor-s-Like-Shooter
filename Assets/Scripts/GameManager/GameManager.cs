@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 
 //public enum state { Playing, Dead }
@@ -9,10 +10,12 @@ public class GameManager : MonoBehaviour
     public IGameState _gameOverState;
 
     public PlayerController _playerController;
-    public UIHandler UIHandler;
-    public EnemiesController _enemyController;
     public PlayerData playerDataSO;
-    public LootManager LootManager;
+
+    [Inject][HideInInspector] public UIHandler UIHandler;
+    [Inject][HideInInspector] public EnemiesController _enemyController;
+
+    [Inject][HideInInspector] public LootManager LootManager;
 
     void Start()
     {
