@@ -1,3 +1,7 @@
+a Survivor's-Like Shooter mobile game.
+
+![image](https://github.com/user-attachments/assets/d7428741-6503-4b56-a32e-60d648c35fad)
+
 I used:
 - object pooling for bullets,  each enemy type, and each loot.
 
