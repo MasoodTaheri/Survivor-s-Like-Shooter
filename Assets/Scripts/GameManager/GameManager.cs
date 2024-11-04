@@ -1,45 +1,49 @@
+using Enemy;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
-
-public class GameManager : MonoBehaviour
+namespace GameManager
 {
-    public IGameState _currentState;
-    public IGameState _playingState;
-    public IGameState _gameOverState;
-
-    public PlayerController _playerController;
-    public PlayerData playerDataSO;
-
-    [Inject][HideInInspector] public UIHandler UIHandler;
-    [Inject][HideInInspector] public EnemiesController _enemyController;
-
-    [Inject][HideInInspector] public LootManager LootManager;
-
-    void Start()
+    public class GameManager : MonoBehaviour
     {
-        _playingState = new PlayingState(this);
-        _gameOverState = new GameOverState(this);
+        private IGameState _currentState;
+        private IGameState _playingState;
+        public IGameState _gameOverState;
+
+        public PlayerController PlayerController;
+        public PlayerData playerDataSO;
+
+        [Inject][HideInInspector] public UIHandler UIHandler;
+        [Inject][HideInInspector] public EnemiesController _enemyController;
+
+        [Inject][HideInInspector] public LootManager LootManager;
+
+        void Start()
+        {
+            _playingState = new PlayingState(this);
+            _gameOverState = new GameOverState(this);
 
 
-        var playerModel = new PlayerModel(playerDataSO);
-        _playerController.Init(playerModel, _enemyController);
-        UIHandler.Initialize(playerModel, _enemyController);
-        LootManager.Initialize(playerModel, _playerController.gameObject, _enemyController);
-        _enemyController.Initialize(_playerController.gameObject);
+            var playerModel = new PlayerModel(playerDataSO);
+            PlayerController.Init(playerModel, _enemyController);
+            UIHandler.Initialize(playerModel, _enemyController);
+            LootManager.Initialize(playerModel, PlayerController.gameObject, _enemyController);
+            _enemyController.Initialize(PlayerController.gameObject);
 
-        SetState(_playingState);
-    }
+            SetState(_playingState);
+        }
 
-    void Update()
-    {
-        _currentState?.Update();
-    }
+        void Update()
+        {
+            _currentState?.Update();
+        }
 
-    public void SetState(IGameState newState)
-    {
-        _currentState?.Exit();
-        _currentState = newState;
-        _currentState.Enter();
+        public void SetState(IGameState newState)
+        {
+            _currentState?.Exit();
+            _currentState = newState;
+            _currentState.Enter();
+        }
     }
 }

@@ -1,4 +1,6 @@
+using DG.Tweening;
 using System.Collections;
+using Enemy;
 using UnityEngine;
 public class EnemyBehavior : MonoBehaviour, IHealth
 {
@@ -76,8 +78,21 @@ public class EnemyBehavior : MonoBehaviour, IHealth
             animator.SetBool("Dead", true);
             gameObject.SetActive(false);
             _enemiesController.EnemyDead(this);
+            ShakeCamera(0.5f, 1);
         }
         else
             animator.SetTrigger("Hit");
+    }
+
+
+    private Camera mainCamera;
+
+    public void ShakeCamera(float intensity, float duration)
+    {
+        mainCamera = Camera.main;
+        // Using DOTween since it's allowed
+        mainCamera.transform
+            .DOShakePosition(duration, intensity)
+            .SetEase(Ease.OutQuad);
     }
 }

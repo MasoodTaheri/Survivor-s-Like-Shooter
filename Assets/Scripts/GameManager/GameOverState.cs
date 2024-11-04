@@ -2,9 +2,9 @@
 
 public class GameOverState : IGameState
 {
-    private readonly GameManager _gameManager;
+    private readonly GameManager.GameManager _gameManager;
 
-    public GameOverState(GameManager gameManager)
+    public GameOverState(GameManager.GameManager gameManager)
     {
         _gameManager = gameManager;
     }
